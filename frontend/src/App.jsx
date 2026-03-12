@@ -14,39 +14,42 @@ import MesDemandes from "./pages/vendeur/MesDemandes"
 import Dashboard from "./pages/vendeur/Dashboard"
 import MesPaiements from "./pages/vendeur/MesPaiements"
 import MesTransactions from "./pages/vendeur/MesTransactions"
+import MesFavoris from "./pages/acheteur/MesFavoris"
+import Tendances from "./pages/acheteur/Tendances"
+
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
         {/* ── Public ── */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/biens" element={<h1>Liste des biens</h1>} />
+        <Route path="/"          element={<Home />} />
+        <Route path="/login"     element={<Login />} />
+        <Route path="/register"  element={<Register />} />
+        <Route path="/biens"     element={<Tendances />} />
         <Route path="/biens/:id" element={<DetailBien />} />
-        <Route path="/contact" element={<h1>Contact</h1>} />
+        <Route path="/contact"   element={<h1>Contact</h1>} />
         <Route path="/mes-droits" element={<h1>Mes droits</h1>} />
 
         {/* ── Vendeur ── */}
-        <Route path="/vendeur/mes-biens" element={<MesBiens />} />
-        <Route path="/vendeur/ajouter-bien" element={<AjouterBien />} />
-        <Route path="/vendeur/creer-contrat" element={<CreerContrat />} />
-        <Route path="/vendeur/contrats" element={<MesContratsVendeur />} />
+        <Route path="/vendeur/dashboard"        element={<Dashboard />} />
+        <Route path="/vendeur/mes-biens"        element={<MesBiens />} />
+        <Route path="/vendeur/ajouter-bien"     element={<AjouterBien />} />
         <Route path="/vendeur/modifier-bien/:id" element={<ModifierBien />} />
-        <Route path="/vendeur/mes-demandes" element={<MesDemandes />} />
-        <Route path="/vendeur/mes-transactions" element={<MesTransactions />} />
-        <Route path="/vendeur/dashboard" element={<Dashboard />} />
+        <Route path="/vendeur/mes-demandes"     element={<MesDemandes />} />
+        <Route path="/vendeur/creer-contrat"    element={<CreerContrat />} />
+        <Route path="/vendeur/contrats"         element={<MesContratsVendeur />} />
         <Route path="/vendeur/mes-paiements"    element={<MesPaiements />} />
+        <Route path="/vendeur/mes-transactions" element={<MesTransactions />} />
 
-        {/* ── Client / Acheteur ──
-            La Navbar utilise /client/... donc on aligne ici */}
-        <Route path="/client/mes-contrats" element={<MesContratsAcheteur />} />
-        <Route path="/client/favoris" element={<h1>Mes Favoris</h1>} />
+        {/* ── Client / Acheteur ── */}
+        <Route path="/client/favoris"       element={<MesFavoris />} />
+        <Route path="/client/mes-contrats"  element={<MesContratsAcheteur />} />
         <Route path="/client/mes-paiements" element={<h1>Mes Paiements</h1>} />
 
-        {/* Anciennes routes acheteur (redirigent vers les nouvelles) */}
+        {/* Anciennes routes (compatibilité) */}
         <Route path="/acheteur/contrats" element={<MesContratsAcheteur />} />
+        <Route path="/acheteur/favoris"  element={<MesFavoris />} />
       </Routes>
     </>
   )
