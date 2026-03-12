@@ -8,22 +8,27 @@ use Illuminate\Http\Request;
 class TransactionController extends Controller
 {
     public function index() {
-        return Transaction::with(['user','bien'])->get();
+        return Transaction::with(['bien.images', 'client', 'proprietaire'])->get();
     }
 
     public function store(Request $request) {
         $transaction = Transaction::create($request->all());
-        return response()->json($transaction, 201);
+        return response()->json(
+            $transaction->load(['bien.images', 'client', 'proprietaire']),
+            201
+        );
     }
 
     public function show($id) {
-        return Transaction::with(['user','bien'])->findOrFail($id);
+        return Transaction::with(['bien.images', 'client', 'proprietaire'])->findOrFail($id);
     }
 
     public function update(Request $request, $id) {
         $transaction = Transaction::findOrFail($id);
         $transaction->update($request->all());
-        return response()->json($transaction, 200);
+        return response()->json(
+            $transaction->load(['bien.images', 'client', 'proprietaire'])
+        );
     }
 
     public function destroy($id) {
