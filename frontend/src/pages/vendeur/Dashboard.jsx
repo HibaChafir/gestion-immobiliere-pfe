@@ -116,7 +116,7 @@ function ProgressBar({ label, value, total, color }) {
 }
 
 // ── Page Dashboard ────────────────────────────────────────────────────────────
-export default function Dashboard() {
+export default function DashboardVendeur() {
   const navigate = useNavigate();
   const userId   = getUserId();
   const user     = getUser();
