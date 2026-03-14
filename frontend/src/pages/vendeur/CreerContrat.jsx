@@ -1,16 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-
-// ── jsPDF (chargé dynamiquement depuis CDN) ───────────────────────────────────
-const loadJsPDF = () =>
-  new Promise((resolve) => {
-    if (window.jspdf) return resolve(window.jspdf.jsPDF);
-    const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-    s.onload = () => resolve(window.jspdf.jsPDF);
-    document.head.appendChild(s);
-  });
 
 const fmt = (n) =>
   new Intl.NumberFormat("fr-MA", {
@@ -88,13 +78,15 @@ function SignatureCanvas({ onSigned, onClear, signed }) {
     e.preventDefault();
     if (!drawing.current) return;
     const canvas = canvasRef.current;
-    const ctx    = canvas.getContext("2d");
-    const pos    = getPos(e, canvas);
+    const ctx = canvas.getContext("2d");
+    const pos = getPos(e, canvas);
     ctx.beginPath();
     ctx.moveTo(lastPos.current.x, lastPos.current.y);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = "#1E3A5F"; ctx.lineWidth = 2.5;
-    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.strokeStyle = "#1E3A5F";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.stroke();
     lastPos.current = pos;
   };
@@ -113,20 +105,32 @@ function SignatureCanvas({ onSigned, onClear, signed }) {
 
   return (
     <div>
-      <div style={{ border: `2px dashed ${signed ? "#4F46E5" : "#CBD5E1"}`, borderRadius: 16, overflow: "hidden", background: "#F8FAFF", position: "relative", transition: "border-color .2s" }}>
+      <div style={{
+        border: `2px dashed ${signed ? "#4F46E5" : "#CBD5E1"}`,
+        borderRadius: 16, overflow: "hidden", background: "#F8FAFF",
+        position: "relative", transition: "border-color .2s",
+      }}>
         {!signed && (
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", flexDirection: "column", gap: 6 }}>
+          <div style={{
+            position: "absolute", inset: 0, display: "flex", alignItems: "center",
+            justifyContent: "center", pointerEvents: "none", flexDirection: "column", gap: 6,
+          }}>
             <span style={{ fontSize: 28, opacity: .3 }}>✍️</span>
             <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 600 }}>Signez ici avec votre souris ou doigt</span>
           </div>
         )}
-        <canvas ref={canvasRef} width={480} height={160}
+        <canvas
+          ref={canvasRef} width={480} height={160}
           style={{ display: "block", width: "100%", height: 160, cursor: "crosshair", touchAction: "none" }}
           onMouseDown={startDraw} onMouseMove={draw} onMouseUp={stopDraw} onMouseLeave={stopDraw}
-          onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={stopDraw} />
+          onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={stopDraw}
+        />
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-        <button onClick={handleClear} style={{ background: "none", border: "1.5px solid #E2E8F0", borderRadius: 9, padding: "7px 16px", color: "#64748B", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>🗑️ Effacer</button>
+        <button onClick={handleClear} style={{
+          background: "none", border: "1.5px solid #E2E8F0", borderRadius: 9,
+          padding: "7px 16px", color: "#64748B", fontSize: 12, fontWeight: 700, cursor: "pointer",
+        }}>🗑️ Effacer</button>
         {signed && <span style={{ fontSize: 12, color: "#059669", fontWeight: 700 }}>✅ Signature capturée</span>}
       </div>
     </div>
@@ -147,17 +151,27 @@ function BienCard({ bien, selected, onSelect }) {
           ? <img src={`http://127.0.0.1:8000/storage/${img}`} alt={bien.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40, color: "#CBD5E1" }}>🏠</div>
         }
-        <span style={{ position: "absolute", top: 8, left: 8, background: bien.type_bien === "vente" ? "#4F46E5" : "#059669", color: "#fff", borderRadius: 8, padding: "2px 10px", fontSize: 10, fontWeight: 800 }}>
+        <span style={{ position: "absolute", top: 8, left: 8,
+          background: bien.type_bien === "vente" ? "#4F46E5" : "#059669",
+          color: "#fff", borderRadius: 8, padding: "2px 10px", fontSize: 10, fontWeight: 800 }}>
           {bien.type_bien === "vente" ? "VENTE" : "LOCATION"}
         </span>
         {selected && (
-          <div style={{ position: "absolute", top: 8, right: 8, background: "#4F46E5", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 800, fontSize: 12 }}>✓</div>
+          <div style={{ position: "absolute", top: 8, right: 8, background: "#4F46E5", borderRadius: "50%",
+            width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center",
+            color: "#fff", fontWeight: 800, fontSize: 12 }}>✓</div>
         )}
       </div>
       <div style={{ padding: "10px 13px 13px" }}>
-        <p style={{ margin: "0 0 2px", fontSize: 13, fontWeight: 700, color: "#0F172A", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{bien.titre}</p>
+        <p style={{ margin: "0 0 2px", fontSize: 13, fontWeight: 700, color: "#0F172A",
+          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{bien.titre}</p>
         <p style={{ margin: "0 0 5px", fontSize: 11, color: "#64748B" }}>{bien.surface}m² · {bien.nb_pieces} pièces</p>
         <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#4F46E5" }}>{fmt(bien.prix)}</p>
+        {bien.vendeur && (
+          <p style={{ margin: "5px 0 0", fontSize: 10, color: "#94A3B8" }}>
+            Vendeur : {bien.vendeur.prenom} {bien.vendeur.nom}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -168,14 +182,18 @@ function UserCard({ user, selected, onSelect }) {
   const c = palette[((user.nom?.charCodeAt(0) || 0) + (user.prenom?.charCodeAt(0) || 0)) % palette.length];
   return (
     <div onClick={() => onSelect(user)} style={{
-      borderRadius: 13, padding: "13px 15px", cursor: "pointer", display: "flex", alignItems: "center", gap: 11,
-      border: `2px solid ${selected ? c : "#E2E8F0"}`, background: selected ? `${c}09` : "#fff",
-      boxShadow: selected ? `0 0 0 3px ${c}20` : "none", transition: "all .15s",
+      borderRadius: 13, padding: "13px 15px", cursor: "pointer",
+      display: "flex", alignItems: "center", gap: 11,
+      border: `2px solid ${selected ? c : "#E2E8F0"}`,
+      background: selected ? `${c}09` : "#fff",
+      boxShadow: selected ? `0 0 0 3px ${c}20` : "none",
+      transition: "all .15s",
     }}>
       <Avatar nom={user.nom} prenom={user.prenom} size={38} />
       <div style={{ minWidth: 0, flex: 1 }}>
         <p style={{ margin: "0 0 1px", fontSize: 13, fontWeight: 700, color: "#0F172A" }}>{user.prenom} {user.nom}</p>
-        <p style={{ margin: 0, fontSize: 11, color: "#94A3B8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
+        <p style={{ margin: 0, fontSize: 11, color: "#94A3B8",
+          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
         {user.telephone && <p style={{ margin: "1px 0 0", fontSize: 11, color: "#CBD5E1" }}>{user.telephone}</p>}
       </div>
       {selected && <span style={{ color: c, fontWeight: 800, fontSize: 20, flexShrink: 0 }}>✓</span>}
@@ -190,159 +208,8 @@ const inp = (err) => ({
   boxSizing: "border-box", fontFamily: "inherit", outline: "none",
 });
 
-// ── Génération PDF avec jsPDF ─────────────────────────────────────────────────
-async function generateContratPDF({ contrat, bien, vendeur, acheteur, montant, dateContrat, signatureData }) {
-  const JsPDF = await loadJsPDF();
-  const doc   = new JsPDF({ unit: "mm", format: "a4" });
-
-  const W = 210, mar = 20;
-  let y = mar;
-
-  const line = (x1, y1, x2, y2, color = "#E2E8F0") => {
-    doc.setDrawColor(color);
-    doc.line(x1, y1, x2, y2);
-  };
-
-  // ── En-tête ──────────────────────────────────────────────────────────────
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, W, 40, "F");
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(20); doc.setFont("helvetica", "bold");
-  doc.text("CONTRAT IMMOBILIER", mar, 18);
-  doc.setFontSize(10); doc.setFont("helvetica", "normal");
-  doc.setTextColor(148, 163, 184);
-  doc.text(`N° ${String(contrat?.id_contrat || "").padStart(5, "0")}  ·  ${bien?.titre || ""}`, mar, 28);
-  doc.text(`Plateforme Gestion Immobilière`, W - mar, 18, { align: "right" });
-  doc.text(`Généré le ${new Date().toLocaleDateString("fr-FR")}`, W - mar, 28, { align: "right" });
-  y = 52;
-
-  // ── Statut badge ──────────────────────────────────────────────────────────
-  doc.setFillColor(236, 253, 245);
-  doc.roundedRect(mar, y - 6, 60, 12, 3, 3, "F");
-  doc.setTextColor(5, 150, 105);
-  doc.setFontSize(9); doc.setFont("helvetica", "bold");
-  doc.text("✓  CONTRAT ENREGISTRÉ", mar + 4, y + 2);
-  y += 16;
-
-  // ── Séparateur ────────────────────────────────────────────────────────────
-  line(mar, y, W - mar, y);
-  y += 8;
-
-  // ── Section : Bien Immobilier ─────────────────────────────────────────────
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(79, 70, 229);
-  doc.text("🏠  BIEN IMMOBILIER", mar, y); y += 7;
-
-  doc.setFillColor(248, 250, 255);
-  doc.roundedRect(mar, y, W - mar * 2, 28, 4, 4, "F");
-  doc.setTextColor(15, 23, 42); doc.setFontSize(13); doc.setFont("helvetica", "bold");
-  doc.text(bien?.titre || "—", mar + 4, y + 8);
-  doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-  doc.text(`Surface : ${bien?.surface || "—"} m²   ·   Pièces : ${bien?.nb_pieces || "—"}   ·   Type : ${bien?.type_bien === "vente" ? "Vente" : "Location"}`, mar + 4, y + 16);
-  doc.text(`Adresse : ${bien?.adresse || "Non précisée"}`, mar + 4, y + 22);
-  y += 36;
-
-  // ── Section : Parties ─────────────────────────────────────────────────────
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(79, 70, 229);
-  doc.text("👥  PARTIES DU CONTRAT", mar, y); y += 7;
-
-  const colW = (W - mar * 2 - 8) / 2;
-
-  // Vendeur box
-  doc.setFillColor(248, 250, 255);
-  doc.roundedRect(mar, y, colW, 30, 4, 4, "F");
-  doc.setFontSize(8); doc.setFont("helvetica", "bold"); doc.setTextColor(100, 116, 139);
-  doc.text("VENDEUR / PROPRIÉTAIRE", mar + 4, y + 6);
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(15, 23, 42);
-  doc.text(`${vendeur?.prenom || ""} ${vendeur?.nom || ""}`, mar + 4, y + 14);
-  doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-  doc.text(vendeur?.email || "—", mar + 4, y + 20);
-  doc.text(vendeur?.telephone || "", mar + 4, y + 26);
-
-  // Acheteur box
-  const col2x = mar + colW + 8;
-  doc.setFillColor(248, 250, 255);
-  doc.roundedRect(col2x, y, colW, 30, 4, 4, "F");
-  doc.setFontSize(8); doc.setFont("helvetica", "bold"); doc.setTextColor(100, 116, 139);
-  doc.text("ACHETEUR / LOCATAIRE", col2x + 4, y + 6);
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(15, 23, 42);
-  doc.text(`${acheteur?.prenom || ""} ${acheteur?.nom || ""}`, col2x + 4, y + 14);
-  doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-  doc.text(acheteur?.email || "—", col2x + 4, y + 20);
-  doc.text(acheteur?.telephone || "", col2x + 4, y + 26);
-  y += 38;
-
-  // ── Section : Détails financiers ──────────────────────────────────────────
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(79, 70, 229);
-  doc.text("💰  DÉTAILS FINANCIERS", mar, y); y += 7;
-
-  doc.setFillColor(240, 253, 244);
-  doc.roundedRect(mar, y, W - mar * 2, 20, 4, 4, "F");
-  doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-  doc.text("Montant total :", mar + 4, y + 8);
-  doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.setTextColor(5, 78, 59);
-  doc.text(fmt(montant), mar + 36, y + 14);
-  doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(100, 116, 139);
-  doc.text(`Date du contrat : ${new Date(dateContrat).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`, W - mar - 4, y + 8, { align: "right" });
-  y += 28;
-
-  // ── Section : Clauses ─────────────────────────────────────────────────────
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(79, 70, 229);
-  doc.text("📋  CONDITIONS GÉNÉRALES", mar, y); y += 7;
-
-  doc.setFontSize(8.5); doc.setFont("helvetica", "normal"); doc.setTextColor(71, 85, 105);
-  const clauses = [
-    "1. Le vendeur garantit être le seul propriétaire du bien et avoir le droit de le vendre ou louer.",
-    "2. L'acheteur/locataire reconnaît avoir visité le bien et l'accepter en l'état.",
-    "3. Le paiement du montant convenu sera effectué selon les modalités agréées entre les parties.",
-    "4. Tout litige sera soumis à la juridiction compétente du ressort du lieu du bien.",
-    "5. Le présent contrat est régi par la législation marocaine en vigueur.",
-  ];
-  clauses.forEach((cl) => {
-    const lines = doc.splitTextToSize(cl, W - mar * 2 - 4);
-    doc.text(lines, mar + 2, y);
-    y += lines.length * 5 + 2;
-  });
-  y += 4;
-
-  // ── Section : Signatures ──────────────────────────────────────────────────
-  line(mar, y, W - mar, y);
-  y += 8;
-  doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.setTextColor(79, 70, 229);
-  doc.text("✍️  SIGNATURES", mar, y); y += 8;
-
-  // Vendeur signature
-  doc.setFillColor(248, 250, 255);
-  doc.roundedRect(mar, y, colW, 38, 4, 4, "F");
-  doc.setFontSize(8); doc.setFont("helvetica", "bold"); doc.setTextColor(100, 116, 139);
-  doc.text("Signature du vendeur", mar + 4, y + 6);
-  if (signatureData) {
-    try { doc.addImage(signatureData, "PNG", mar + 4, y + 9, colW - 8, 22); } catch {}
-  }
-  doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(5, 150, 105);
-  doc.text("✓ Signé électroniquement", mar + 4, y + 33);
-
-  // Acheteur signature
-  doc.setFillColor(255, 251, 235);
-  doc.roundedRect(col2x, y, colW, 38, 4, 4, "F");
-  doc.setFontSize(8); doc.setFont("helvetica", "bold"); doc.setTextColor(100, 116, 139);
-  doc.text("Signature de l'acheteur", col2x + 4, y + 6);
-  doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(217, 119, 6);
-  doc.text("⏳ En attente de signature", col2x + 4, y + 22);
-  y += 46;
-
-  // ── Pied de page ──────────────────────────────────────────────────────────
-  doc.setFillColor(241, 245, 249);
-  doc.rect(0, 282, W, 15, "F");
-  doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(148, 163, 184);
-  doc.text("Ce document a été généré automatiquement par la Plateforme de Gestion Immobilière.", mar, 290);
-  doc.text(`Page 1/1  ·  Contrat N° ${String(contrat?.id_contrat || "").padStart(5, "0")}`, W - mar, 290, { align: "right" });
-
-  return doc;
-}
-
 export default function CreerContrat() {
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate = useNavigate(); // ✅ useNavigate au lieu de onNavigate prop
 
   const [step, setStep]       = useState(1);
   const [biens, setBiens]     = useState([]);
@@ -368,10 +235,15 @@ export default function CreerContrat() {
   const [success, setSuccess]             = useState(null);
   const [signatureData, setSignatureData] = useState(null);
   const [signErr, setSignErr]             = useState("");
-  const [pdfGenerating, setPdfGenerating] = useState(false);
+
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     setLoading(true);
+    // Auto-remplir le vendeur avec l'utilisateur connecté
+    if (currentUser?.id_user) {
+      setVendeurSel(currentUser);
+    }
     axios.get("/contrats/form-data")
       .then(({ data }) => {
         setBiens(Array.isArray(data?.biens) ? data.biens : []);
@@ -381,7 +253,6 @@ export default function CreerContrat() {
           const b = location.state.bien;
           setBienSel(b);
           setMontant(String(b.prix || ""));
-          if (b.vendeur) setVendeurSel(b.vendeur);
         }
         if (location.state?.acheteur) setAcheteurSel(location.state.acheteur);
         if (location.state?.bien && location.state?.acheteur) setStep(3);
@@ -393,7 +264,6 @@ export default function CreerContrat() {
   const pickBien = (b) => {
     setBienSel(b);
     setMontant(String(b.prix || ""));
-    if (b.vendeur) setVendeurSel(b.vendeur);
   };
 
   const canNext = () => {
@@ -441,24 +311,6 @@ export default function CreerContrat() {
     } finally { setSigning(false); }
   };
 
-  const handleDownloadPDF = async () => {
-    setPdfGenerating(true);
-    try {
-      const doc = await generateContratPDF({
-        contrat:       success,
-        bien:          bienSel,
-        vendeur:       vendeurSel,
-        acheteur:      acheteurSel,
-        montant,
-        dateContrat,
-        signatureData,
-      });
-      doc.save(`contrat-${String(success?.id_contrat || "").padStart(5, "0")}.pdf`);
-    } catch (e) {
-      console.error("PDF error:", e);
-    } finally { setPdfGenerating(false); }
-  };
-
   const reset = () => {
     setStep(1); setBienSel(null); setVendeurSel(null);
     setAcheteurSel(null); setMontant(""); setPdfFile(null);
@@ -466,9 +318,9 @@ export default function CreerContrat() {
   };
 
   const fBiens = (biens ?? []).filter((b) => b?.titre?.toLowerCase().includes(sBien.toLowerCase()));
-  const fVend  = (users ?? []).filter((u) =>
-    `${u?.nom ?? ""} ${u?.prenom ?? ""} ${u?.email ?? ""}`.toLowerCase().includes(sV.toLowerCase()));
+  // Acheteurs : uniquement id_role === 3 (clients)
   const fAchet = (users ?? []).filter((u) =>
+    u?.id_role === 3 &&
     `${u?.nom ?? ""} ${u?.prenom ?? ""} ${u?.email ?? ""}`.toLowerCase().includes(sA.toLowerCase()) &&
     (!vendeurSel || u.id_user !== vendeurSel.id_user));
 
@@ -505,17 +357,6 @@ export default function CreerContrat() {
     </div>
   );
 
-  // ── Ligne de résumé ───────────────────────────────────────────────────────
-  const ResumeRow = ({ icon, label, value, highlight }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px",
-      borderBottom: "1px solid #F1F5F9" }}>
-      <span style={{ fontSize: 18, width: 28, textAlign: "center" }}>{icon}</span>
-      <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 600, width: 110, flexShrink: 0 }}>{label}</span>
-      <span style={{ fontSize: highlight ? 16 : 13, fontWeight: highlight ? 800 : 600,
-        color: highlight ? "#059669" : "#0F172A", flex: 1 }}>{value}</span>
-    </div>
-  );
-
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(145deg,#F0F4FF,#E8F4FD)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <style>{`
@@ -536,6 +377,7 @@ export default function CreerContrat() {
           </button>
           <p style={{ margin: "0 0 2px", fontSize: 11, fontWeight: 800, color: "#4F46E5", letterSpacing: ".14em" }}>NOUVEAU</p>
           <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, color: "#0F172A", letterSpacing: "-.02em" }}>Créer un contrat</h1>
+          <p style={{ margin: "6px 0 0", fontSize: 14, color: "#64748B" }}>Les données sont chargées depuis votre base de données MySQL.</p>
         </div>
 
         {loadErr && (
@@ -552,18 +394,21 @@ export default function CreerContrat() {
           {loading ? (
             <div style={{ textAlign: "center", padding: "60px 0", color: "#94A3B8" }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
-              <p style={{ fontWeight: 700, fontSize: 15, margin: 0 }}>Chargement…</p>
+              <p style={{ fontWeight: 700, fontSize: 15, margin: 0 }}>Connexion à la base de données…</p>
+              <p style={{ fontSize: 13, margin: "6px 0 0" }}>Chargement des biens et utilisateurs</p>
             </div>
 
           ) : step === 1 ? (
-            /* ── ÉTAPE 1 : Bien ── */
             <div style={{ animation: "up .25s ease" }}>
               <h2 style={{ margin: "0 0 4px", fontSize: 19, fontWeight: 800, color: "#0F172A" }}>Choisir le bien immobilier</h2>
-              <p style={{ margin: "0 0 20px", fontSize: 13, color: "#64748B" }}>Sélectionnez le bien concerné par ce contrat.</p>
-              <SearchBox val={sBien} set={setSBien} ph="Rechercher par titre…" />
+              <p style={{ margin: "0 0 20px", fontSize: 13, color: "#64748B" }}>
+                Biens avec statut <strong>disponible</strong> depuis la table <code>bien_immobilier</code>.
+              </p>
+              <SearchBox val={sBien} set={setSBien} ph="Rechercher par titre ou type…" />
               {fBiens.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "40px 0", color: "#94A3B8" }}>
-                  <div style={{ fontSize: 36 }}>🏚️</div><p style={{ margin: "8px 0 0" }}>Aucun bien disponible</p>
+                  <div style={{ fontSize: 36 }}>🏚️</div>
+                  <p style={{ margin: "8px 0 0" }}>Aucun bien disponible</p>
                 </div>
               ) : (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gap: 14, maxHeight: 420, overflowY: "auto" }}>
@@ -574,42 +419,69 @@ export default function CreerContrat() {
             </div>
 
           ) : step === 2 ? (
-            /* ── ÉTAPE 2 : Parties ── */
             <div style={{ animation: "up .25s ease" }}>
               <h2 style={{ margin: "0 0 4px", fontSize: 19, fontWeight: 800, color: "#0F172A" }}>Parties du contrat</h2>
-              <p style={{ margin: "0 0 22px", fontSize: 13, color: "#64748B" }}>Sélectionnez le vendeur et l'acheteur.</p>
+              <p style={{ margin: "0 0 22px", fontSize: 13, color: "#64748B" }}>
+                Le vendeur est rempli automatiquement. Choisissez l'acheteur parmi les clients.
+              </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
+
+                {/* ── Vendeur : auto-rempli, non modifiable ── */}
                 <div>
-                  <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 800, color: "#4F46E5", letterSpacing: ".07em" }}>👤 VENDEUR</p>
-                  <SearchBox val={sV} set={setSV} ph="Rechercher un vendeur…" />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 360, overflowY: "auto" }}>
-                    {fVend.map((u) => <UserCard key={u.id_user} user={u} selected={vendeurSel?.id_user === u.id_user} onSelect={setVendeurSel} />)}
+                  <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 800, color: "#4F46E5", letterSpacing: ".07em" }}>👤 VENDEUR (vous)</p>
+                  <div style={{
+                    borderRadius: 13, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12,
+                    border: "2px solid #4F46E5", background: "#EEF2FF",
+                    boxShadow: "0 0 0 3px rgba(79,70,229,.1)",
+                  }}>
+                    <Avatar nom={vendeurSel?.nom} prenom={vendeurSel?.prenom} size={40} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                        {vendeurSel?.prenom} {vendeurSel?.nom}
+                      </p>
+                      <p style={{ margin: 0, fontSize: 12, color: "#64748B", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {vendeurSel?.email}
+                      </p>
+                      {vendeurSel?.telephone && (
+                        <p style={{ margin: "2px 0 0", fontSize: 11, color: "#94A3B8" }}>{vendeurSel.telephone}</p>
+                      )}
+                    </div>
+                    <span style={{ fontSize: 22, color: "#4F46E5", fontWeight: 800 }}>✓</span>
                   </div>
+                  <p style={{ margin: "8px 0 0", fontSize: 11, color: "#94A3B8", fontStyle: "italic" }}>
+                    🔒 Rempli automatiquement depuis votre compte
+                  </p>
                 </div>
+
+                {/* ── Acheteur : clients uniquement (id_role = 3) ── */}
                 <div>
-                  <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 800, color: "#059669", letterSpacing: ".07em" }}>🤝 ACHETEUR</p>
-                  <SearchBox val={sA} set={setSA} ph="Rechercher un acheteur…" />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 360, overflowY: "auto" }}>
-                    {fAchet.map((u) => <UserCard key={u.id_user} user={u} selected={acheteurSel?.id_user === u.id_user} onSelect={setAcheteurSel} />)}
-                  </div>
+                  <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 800, color: "#059669", letterSpacing: ".07em" }}>🤝 ACHETEUR (clients uniquement)</p>
+                  <SearchBox val={sA} set={setSA} ph="Rechercher un client…" />
+                  {fAchet.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "30px 0", color: "#94A3B8" }}>
+                      <div style={{ fontSize: 32 }}>👤</div>
+                      <p style={{ margin: "8px 0 0", fontSize: 13 }}>Aucun client trouvé</p>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 360, overflowY: "auto" }}>
+                      {fAchet.map((u) => (
+                        <UserCard key={u.id_user} user={u} selected={acheteurSel?.id_user === u.id_user} onSelect={setAcheteurSel} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-              {vendeurSel && acheteurSel && vendeurSel.id_user === acheteurSel.id_user && (
-                <div style={{ marginTop: 14, background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", color: "#DC2626", fontSize: 13, fontWeight: 600 }}>
-                  ⚠️ Le vendeur et l'acheteur ne peuvent pas être la même personne.
-                </div>
-              )}
               <NavRow />
             </div>
 
           ) : step === 3 ? (
-            /* ── ÉTAPE 3 : Infos contrat ── */
             <div style={{ animation: "up .25s ease" }}>
               <h2 style={{ margin: "0 0 4px", fontSize: 19, fontWeight: 800, color: "#0F172A" }}>Informations du contrat</h2>
-              <p style={{ margin: "0 0 22px", fontSize: 13, color: "#64748B" }}>Renseignez le montant et la date.</p>
-
-              {/* Mini récap bien + parties */}
-              <div style={{ background: "#F8FAFF", borderRadius: 14, padding: "14px 18px", marginBottom: 26, border: "1px solid #E2E8F0", display: "flex", gap: 14, alignItems: "center" }}>
+              <p style={{ margin: "0 0 22px", fontSize: 13, color: "#64748B" }}>
+                Ces données seront enregistrées dans la table <code>contrat</code>.
+              </p>
+              <div style={{ background: "#F8FAFF", borderRadius: 14, padding: "14px 18px", marginBottom: 26,
+                border: "1px solid #E2E8F0", display: "flex", gap: 14, alignItems: "center" }}>
                 <div style={{ width: 58, height: 58, borderRadius: 12, overflow: "hidden", background: "#E2E8F0", flexShrink: 0 }}>
                   {bienSel?.images?.[0]?.url_image
                     ? <img src={`http://127.0.0.1:8000/storage/${bienSel.images[0].url_image}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -618,21 +490,26 @@ export default function CreerContrat() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ margin: "0 0 2px", fontSize: 15, fontWeight: 800, color: "#0F172A" }}>{bienSel?.titre}</p>
-                  <p style={{ margin: 0, fontSize: 12, color: "#64748B" }}>{bienSel?.surface}m² · {bienSel?.nb_pieces} pièces</p>
+                  <p style={{ margin: "0 0 4px", fontSize: 12, color: "#64748B" }}>{bienSel?.surface}m² · {bienSel?.nb_pieces} pièces</p>
+                  <span style={{ fontSize: 11, fontWeight: 700, padding: "1px 8px", borderRadius: 6,
+                    background: bienSel?.type_bien === "vente" ? "#EEF2FF" : "#ECFDF5",
+                    color: bienSel?.type_bien === "vente" ? "#4F46E5" : "#059669" }}>
+                    {bienSel?.type_bien === "vente" ? "🏠 Vente" : "🔑 Location"}
+                  </span>
                 </div>
-                <div style={{ borderLeft: "1px solid #E2E8F0", paddingLeft: 16, display: "flex", flexDirection: "column", gap: 6 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                    <Avatar nom={vendeurSel?.nom} prenom={vendeurSel?.prenom} size={24} />
+                <div style={{ borderLeft: "1px solid #E2E8F0", paddingLeft: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+                    <Avatar nom={vendeurSel?.nom} prenom={vendeurSel?.prenom} size={26} />
                     <span style={{ fontSize: 12, fontWeight: 600, color: "#1E293B" }}>{vendeurSel?.prenom} {vendeurSel?.nom}</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                    <Avatar nom={acheteurSel?.nom} prenom={acheteurSel?.prenom} size={24} />
+                    <Avatar nom={acheteurSel?.nom} prenom={acheteurSel?.prenom} size={26} />
                     <span style={{ fontSize: 12, fontWeight: 600, color: "#1E293B" }}>{acheteurSel?.prenom} {acheteurSel?.nom}</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, maxWidth: 600 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 700, color: "#475569", display: "block", marginBottom: 7 }}>💰 Montant (MAD) *</label>
                   <input type="number" min="1" value={montant} onChange={(e) => setMontant(e.target.value)}
@@ -642,17 +519,14 @@ export default function CreerContrat() {
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 700, color: "#475569", display: "block", marginBottom: 7 }}>📅 Date du contrat *</label>
                   <input type="date" value={dateContrat} onChange={(e) => setDateContrat(e.target.value)} style={inp(errors.date_contrat)} />
+                  {errors.date_contrat && <p style={{ margin: "4px 0 0", fontSize: 11, color: "#DC2626" }}>{errors.date_contrat[0]}</p>}
                 </div>
-                <div>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: "#475569", display: "block", marginBottom: 7 }}>📄 Fichier PDF (optionnel)</label>
-                  <input type="file" accept=".pdf" onChange={(e) => setPdfFile(e.target.files[0])}
-                    style={{ ...inp(false), padding: "9px 14px", cursor: "pointer" }} />
-                  {pdfFile && <p style={{ margin: "4px 0 0", fontSize: 11, color: "#059669", fontWeight: 600 }}>✓ {pdfFile.name}</p>}
-                </div>
+
               </div>
 
               {errors.global && (
-                <div style={{ marginTop: 18, background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "12px 16px", color: "#DC2626", fontWeight: 600 }}>
+                <div style={{ marginTop: 18, background: "#FEF2F2", border: "1px solid #FECACA",
+                  borderRadius: 10, padding: "12px 16px", color: "#DC2626", fontWeight: 600 }}>
                   ⚠️ {errors.global}
                 </div>
               )}
@@ -660,40 +534,43 @@ export default function CreerContrat() {
             </div>
 
           ) : step === 4 ? (
-            /* ── ÉTAPE 4 : RÉSUMÉ SIMPLIFIÉ ── */
             <div style={{ animation: "up .25s ease" }}>
-              <div style={{ textAlign: "center", marginBottom: 28 }}>
-                <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg,#4F46E5,#0891B2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, margin: "0 auto 12px" }}>✅</div>
-                <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 800, color: "#0F172A" }}>Résumé du contrat</h2>
-                <p style={{ margin: 0, fontSize: 13, color: "#64748B" }}>Vérifiez les informations avant de créer le contrat.</p>
-              </div>
-
+              <h2 style={{ margin: "0 0 4px", fontSize: 19, fontWeight: 800, color: "#0F172A" }}>Confirmer le contrat</h2>
+              <p style={{ margin: "0 0 24px", fontSize: 13, color: "#64748B" }}>Vérifiez avant d'enregistrer dans la base de données.</p>
               <div style={{ background: "#F8FAFF", borderRadius: 18, border: "1.5px solid #E2E8F0", overflow: "hidden", marginBottom: 22 }}>
-                <ResumeRow icon="🏠" label="Bien"      value={bienSel?.titre} />
-                <ResumeRow icon="📐" label="Surface"   value={`${bienSel?.surface} m² · ${bienSel?.nb_pieces} pièces`} />
-                <ResumeRow icon="🏷️" label="Type"      value={bienSel?.type_bien === "vente" ? "Vente" : "Location"} />
-                <ResumeRow icon="👤" label="Vendeur"   value={`${vendeurSel?.prenom} ${vendeurSel?.nom}`} />
-                <ResumeRow icon="🤝" label="Acheteur"  value={`${acheteurSel?.prenom} ${acheteurSel?.nom}`} />
-                <ResumeRow icon="💰" label="Montant"   value={fmt(montant)} highlight />
-                <ResumeRow icon="📅" label="Date"      value={new Date(dateContrat).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })} />
-                <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontSize: 18, width: 28, textAlign: "center" }}>📄</span>
-                  <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 600, width: 110, flexShrink: 0 }}>PDF joint</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: pdfFile ? "#059669" : "#94A3B8" }}>
-                    {pdfFile ? `✓ ${pdfFile.name}` : "Aucun — sera généré automatiquement"}
-                  </span>
+                <div style={{ height: 140, background: "#E2E8F0", position: "relative", overflow: "hidden" }}>
+                  {bienSel?.images?.[0]?.url_image
+                    ? <img src={`http://127.0.0.1:8000/storage/${bienSel.images[0].url_image}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 48, color: "#CBD5E1" }}>🏠</div>
+                  }
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top,rgba(0,0,0,.6),transparent)" }} />
+                  <div style={{ position: "absolute", bottom: 14, left: 18 }}>
+                    <p style={{ margin: "0 0 3px", fontSize: 18, fontWeight: 800, color: "#fff" }}>{bienSel?.titre}</p>
+                    <span style={{ background: "rgba(255,255,255,.2)", color: "#fff", borderRadius: 8, padding: "2px 10px", fontSize: 11, fontWeight: 700 }}>
+                      {bienSel?.type_bien === "vente" ? "🏠 Vente" : "🔑 Location"}
+                    </span>
+                  </div>
+                </div>
+                <div style={{ padding: "20px 24px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18 }}>
+                    {[
+                      { label: "Vendeur",  value: `${vendeurSel?.prenom ?? ""} ${vendeurSel?.nom ?? ""}`,   sub: vendeurSel?.email },
+                      { label: "Acheteur", value: `${acheteurSel?.prenom ?? ""} ${acheteurSel?.nom ?? ""}`, sub: acheteurSel?.email },
+                      { label: "Montant",  value: fmt(montant), hi: true },
+                      { label: "Date",     value: new Date(dateContrat).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" }) },
+                      { label: "PDF",      value: pdfFile ? `📄 ${pdfFile.name}` : "Aucun" },
+                    ].map((r) => (
+                      <div key={r.label}>
+                        <p style={{ margin: "0 0 3px", fontSize: 10, color: "#94A3B8", fontWeight: 700, letterSpacing: ".06em" }}>{r.label.toUpperCase()}</p>
+                        <p style={{ margin: 0, fontSize: r.hi ? 16 : 13, fontWeight: r.hi ? 800 : 700, color: r.hi ? "#059669" : "#0F172A" }}>{r.value}</p>
+                        {r.sub && <p style={{ margin: 0, fontSize: 11, color: "#94A3B8" }}>{r.sub}</p>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              <div style={{ background: "#EEF2FF", border: "1px solid #A5B4FC", borderRadius: 12, padding: "12px 18px", marginBottom: 4, display: "flex", gap: 10, alignItems: "center" }}>
-                <span style={{ fontSize: 20 }}>💡</span>
-                <p style={{ margin: 0, fontSize: 12, color: "#3730A3" }}>
-                  Un PDF du contrat sera <strong>généré et téléchargeable</strong> une fois le contrat signé.
-                </p>
-              </div>
-
               <NavRow
-                nextLabel={submitting ? "⏳ Création…" : "✓ Créer le contrat"}
+                nextLabel={submitting ? "⏳ Enregistrement…" : "✓ Créer le contrat"}
                 nextClick={handleSubmit}
                 nextDisabled={submitting}
                 nextColor="#059669"
@@ -701,20 +578,30 @@ export default function CreerContrat() {
             </div>
 
           ) : step === 5 ? (
-            /* ── ÉTAPE 5 : Signature vendeur ── */
             <div style={{ animation: "up .25s ease" }}>
               <div style={{ textAlign: "center", marginBottom: 28 }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "linear-gradient(135deg,#4F46E5,#0891B2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, margin: "0 auto 14px", boxShadow: "0 8px 24px rgba(79,70,229,.3)" }}>✍️</div>
+                <div style={{ width: 64, height: 64, borderRadius: "50%",
+                  background: "linear-gradient(135deg,#4F46E5,#0891B2)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 28, margin: "0 auto 14px", boxShadow: "0 8px 24px rgba(79,70,229,.3)" }}>
+                  ✍️
+                </div>
                 <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 800, color: "#0F172A" }}>Signature du vendeur</h2>
                 <p style={{ margin: 0, fontSize: 13, color: "#64748B" }}>
-                  Contrat <strong style={{ color: "#4F46E5" }}>N° {String(success?.id_contrat || "").padStart(5, "0")}</strong> créé avec succès — signez pour le valider
+                  Contrat <strong style={{ color: "#4F46E5" }}>N° {String(success?.id_contrat || "").padStart(5, "0")}</strong> créé — signez pour le valider
                 </p>
               </div>
 
-              {/* Mini récap */}
-              <div style={{ background: "#F8FAFF", borderRadius: 14, border: "1px solid #E2E8F0", padding: "14px 20px", marginBottom: 24, display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
+              <div style={{ background: "#F8FAFF", borderRadius: 14, border: "1px solid #E2E8F0",
+                padding: "14px 20px", marginBottom: 24,
+                display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <span style={{ fontSize: 22 }}>🏠</span>
+                  <div style={{ width: 44, height: 36, borderRadius: 9, overflow: "hidden", background: "#E2E8F0", flexShrink: 0 }}>
+                    {bienSel?.images?.[0]?.url_image
+                      ? <img src={`http://127.0.0.1:8000/storage/${bienSel.images[0].url_image}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 18 }}>🏠</div>
+                    }
+                  </div>
                   <div>
                     <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#0F172A" }}>{bienSel?.titre}</p>
                     <p style={{ margin: 0, fontSize: 11, color: "#64748B" }}>{fmt(montant)}</p>
@@ -722,19 +609,26 @@ export default function CreerContrat() {
                 </div>
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   <Avatar nom={vendeurSel?.nom} prenom={vendeurSel?.prenom} size={28} />
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#0F172A" }}>{vendeurSel?.prenom} {vendeurSel?.nom}</span>
+                  <div>
+                    <p style={{ margin: 0, fontSize: 11, color: "#94A3B8" }}>Vendeur</p>
+                    <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: "#0F172A" }}>{vendeurSel?.prenom} {vendeurSel?.nom}</p>
+                  </div>
                 </div>
-                <span style={{ color: "#CBD5E1" }}>→</span>
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   <Avatar nom={acheteurSel?.nom} prenom={acheteurSel?.prenom} size={28} />
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#0F172A" }}>{acheteurSel?.prenom} {acheteurSel?.nom}</span>
+                  <div>
+                    <p style={{ margin: 0, fontSize: 11, color: "#94A3B8" }}>Acheteur</p>
+                    <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: "#0F172A" }}>{acheteurSel?.prenom} {acheteurSel?.nom}</p>
+                  </div>
                 </div>
                 <div style={{ marginLeft: "auto" }}>
-                  <span style={{ background: "#FFF7ED", color: "#D97706", border: "1px solid #FCD34D", borderRadius: 8, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>⏳ En attente de signature</span>
+                  <span style={{ background: "#FFF7ED", color: "#D97706", border: "1px solid #FCD34D",
+                    borderRadius: 8, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>
+                    ⏳ En attente de signature
+                  </span>
                 </div>
               </div>
 
-              {/* Canvas signature */}
               <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #E2E8F0", padding: "22px 24px", marginBottom: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                   <Avatar nom={vendeurSel?.nom} prenom={vendeurSel?.prenom} size={36} />
@@ -743,22 +637,34 @@ export default function CreerContrat() {
                     <p style={{ margin: 0, fontSize: 11, color: "#94A3B8" }}>Signature électronique du vendeur</p>
                   </div>
                 </div>
-                <SignatureCanvas onSigned={setSignatureData} onClear={() => setSignatureData(null)} signed={!!signatureData} />
+                <SignatureCanvas
+                  onSigned={setSignatureData}
+                  onClear={() => setSignatureData(null)}
+                  signed={!!signatureData}
+                />
               </div>
 
-              <div style={{ background: "#F0FDF4", borderRadius: 13, border: "1px solid #BBF7D0", padding: "12px 18px", marginBottom: 20, display: "flex", gap: 10, alignItems: "center" }}>
+              <div style={{ background: "#F0FDF4", borderRadius: 13, border: "1px solid #BBF7D0",
+                padding: "12px 18px", marginBottom: 20, display: "flex", gap: 10, alignItems: "center" }}>
                 <span style={{ fontSize: 20 }}>ℹ️</span>
                 <p style={{ margin: 0, fontSize: 12, color: "#166534", lineHeight: 1.5 }}>
-                  Après votre signature, <strong>{acheteurSel?.prenom} {acheteurSel?.nom}</strong> devra signer dans son espace pour finaliser le contrat.
+                  Après votre signature, <strong>{acheteurSel?.prenom} {acheteurSel?.nom}</strong> devra
+                  se connecter dans son espace pour signer à son tour et finaliser le contrat.
                 </p>
               </div>
 
               {signErr && (
-                <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", color: "#DC2626", fontSize: 13, fontWeight: 600, marginBottom: 16 }}>⚠️ {signErr}</div>
+                <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10,
+                  padding: "10px 14px", color: "#DC2626", fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
+                  ⚠️ {signErr}
+                </div>
               )}
 
               <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid #F1F5F9" }}>
-                <button onClick={() => navigate("/vendeur/contrats")} style={{ padding: "12px 22px", borderRadius: 12, border: "1.5px solid #E2E8F0", background: "transparent", color: "#64748B", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                <button onClick={() => navigate("/vendeur/contrats")} style={{
+                  padding: "12px 22px", borderRadius: 12, border: "1.5px solid #E2E8F0",
+                  background: "transparent", color: "#64748B", fontWeight: 700, fontSize: 14, cursor: "pointer",
+                }}>
                   Signer plus tard
                 </button>
                 <button onClick={handleSign} disabled={!signatureData || signing} style={{
@@ -774,17 +680,16 @@ export default function CreerContrat() {
             </div>
 
           ) : step === 6 ? (
-            /* ── ÉTAPE 6 : Succès + téléchargement PDF ── */
             <div style={{ textAlign: "center", padding: "24px 0 12px", animation: "pop .3s ease" }}>
               <div style={{ fontSize: 72, marginBottom: 16 }}>🎉</div>
               <h2 style={{ margin: "0 0 8px", fontSize: 26, fontWeight: 800, color: "#0F172A" }}>Contrat signé !</h2>
               <p style={{ color: "#64748B", marginBottom: 6, fontSize: 15 }}>
-                Contrat <strong style={{ color: "#4F46E5" }}>N° {String(success?.id_contrat || "").padStart(5, "0")}</strong> enregistré et signé par le vendeur.
+                Le contrat <strong style={{ color: "#4F46E5" }}>N° {String(success?.id_contrat || "").padStart(5, "0")}</strong> est signé par le vendeur.
               </p>
-              <p style={{ color: "#94A3B8", fontSize: 13, marginBottom: 28 }}>{bienSel?.titre} · {fmt(montant)}</p>
+              <p style={{ color: "#94A3B8", fontSize: 13, marginBottom: 24 }}>{bienSel?.titre} · {fmt(montant)}</p>
 
-              {/* Statut signatures */}
-              <div style={{ display: "inline-flex", gap: 16, background: "#F8FAFF", borderRadius: 14, border: "1px solid #E2E8F0", padding: "14px 24px", marginBottom: 28 }}>
+              <div style={{ display: "inline-flex", gap: 16, background: "#F8FAFF", borderRadius: 14,
+                border: "1px solid #E2E8F0", padding: "14px 24px", marginBottom: 28 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#059669", display: "inline-block" }} />
                   <span style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>Vendeur ✅</span>
@@ -796,26 +701,14 @@ export default function CreerContrat() {
                 </div>
               </div>
 
-              {/* Bouton télécharger PDF */}
-              <div style={{ background: "#F0FDF4", border: "1.5px solid #6EE7B7", borderRadius: 18, padding: "20px 28px", marginBottom: 28, display: "inline-block", minWidth: 340 }}>
-                <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 800, color: "#065F46" }}>📄 Contrat disponible en PDF</p>
-                <p style={{ margin: "0 0 16px", fontSize: 12, color: "#059669" }}>Téléchargez une copie du contrat avec votre signature.</p>
-                <button onClick={handleDownloadPDF} disabled={pdfGenerating} style={{
-                  padding: "13px 32px", borderRadius: 13, border: "none", fontWeight: 700, fontSize: 14,
-                  background: pdfGenerating ? "#E2E8F0" : "linear-gradient(135deg,#059669,#0891B2)",
-                  color: pdfGenerating ? "#94A3B8" : "#fff", cursor: pdfGenerating ? "not-allowed" : "pointer",
-                  boxShadow: pdfGenerating ? "none" : "0 4px 18px rgba(5,150,105,.35)",
-                  display: "flex", alignItems: "center", gap: 8, margin: "0 auto",
-                }}>
-                  {pdfGenerating ? "⏳ Génération…" : "⬇️ Télécharger le PDF"}
-                </button>
-              </div>
-
               <div style={{ display: "flex", gap: 14, justifyContent: "center" }}>
-                <button onClick={reset} style={{ padding: "13px 24px", borderRadius: 12, border: "1.5px solid #E2E8F0", background: "#fff", color: "#64748B", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
+                <button onClick={reset} style={{ padding: "13px 24px", borderRadius: 12, border: "1.5px solid #E2E8F0",
+                  background: "#fff", color: "#64748B", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
                   + Nouveau contrat
                 </button>
-                <button onClick={() => navigate("/vendeur/contrats")} style={{ padding: "13px 28px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#4F46E5,#0891B2)", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer", boxShadow: "0 4px 18px rgba(79,70,229,.3)" }}>
+                <button onClick={() => navigate("/vendeur/contrats")} style={{ padding: "13px 28px", borderRadius: 12,
+                  border: "none", background: "linear-gradient(135deg,#4F46E5,#0891B2)", color: "#fff",
+                  fontWeight: 700, fontSize: 14, cursor: "pointer", boxShadow: "0 4px 18px rgba(79,70,229,.3)" }}>
                   Voir tous les contrats →
                 </button>
               </div>
