@@ -69,11 +69,15 @@ export default function MesBiens() {
 
   // ── Image du bien ─────────────────────────────────────────
   const getImage = (bien) => {
-    if (bien.images && bien.images.length > 0) {
-      return `http://127.0.0.1:8000/storage/${bien.images[0].url_image}`;
-    }
-    return "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=80";
-  };
+  if (bien.images && bien.images.length > 0) {
+    const url = bien.images[0].url_image;
+    // Si l'URL est déjà complète (http), on la retourne directement
+    if (url.startsWith('http')) return url;
+    // Sinon on ajoute le préfixe storage
+    return `http://127.0.0.1:8000/storage/${url}`;
+  }
+  return "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=80";
+};
 
   return (
     <div style={{ minHeight: "100vh", background: "#f1f5f9", fontFamily: "'DM Sans', sans-serif", paddingLeft: 260 }}>
