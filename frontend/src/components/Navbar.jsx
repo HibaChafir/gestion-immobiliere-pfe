@@ -20,124 +20,177 @@ function Navbar() {
 
   const linkStyle = (path) => ({
     textDecoration: 'none',
-    color: isActive(path) ? '#2563eb' : '#374151',
+    color: isActive(path) ? '#b8860b' : '#4a6fa5',
     fontWeight: isActive(path) ? '700' : '500',
-    fontSize: '14px',
-    padding: '6px 10px',
-    borderRadius: '6px',
-    background: isActive(path) ? '#EEF2FF' : 'transparent',
+    fontSize: '13px',
+    padding: '6px 12px',
+    borderRadius: '4px',
+    background: isActive(path) ? 'rgba(184,134,11,0.08)' : 'transparent',
     transition: 'all 0.2s',
     whiteSpace: 'nowrap',
+    fontFamily: "'DM Sans', sans-serif",
+    letterSpacing: '0.3px',
+    borderBottom: isActive(path) ? '2px solid #b8860b' : '2px solid transparent',
   })
 
   return (
-    <nav style={{
-      background: 'white',
-      padding: '0 30px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      height: '64px',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000,
-    }}>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+        .nav-link:hover { color: #b8860b !important; background: rgba(184,134,11,0.06) !important; }
+        .btn-logout:hover { background: #ef4444 !important; color: white !important; }
+        .btn-login:hover { background: #1a3a5e !important; }
+        .btn-register:hover { background: rgba(26,58,94,0.06) !important; }
+        .nav-scroll { backdrop-filter: blur(12px); }
+      `}</style>
 
-      {/* ── Logo ── */}
-      <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-        <svg width="36" height="36" viewBox="0 0 36 36">
-          <polygon points="18,2 34,20 2,20" fill="#2563eb" />
-          <rect x="6" y="20" width="24" height="14" fill="#2563eb" rx="1" />
-          <rect x="14" y="26" width="8" height="8" fill="white" rx="1" />
-        </svg>
-        <span style={{ fontWeight: 'bold', fontSize: '20px', color: '#2563eb' }}>ImmoExpert</span>
-      </Link>
+      <nav style={{
+        background: 'rgba(255,255,255,0.97)',
+        padding: '0 40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '68px',
+        boxShadow: '0 1px 0 rgba(26,58,94,0.08), 0 4px 20px rgba(26,58,94,0.06)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        backdropFilter: 'blur(12px)',
+      }}>
 
-      {/* ── Liens navigation ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-
-        {/* Visiteur non connecté */}
-        {!token && (
-          <>
-            <Link to="/"           style={linkStyle('/__home__')}>Accueil</Link>
-            <Link to="/biens"      style={linkStyle('/biens')}>Tendances</Link>
-            <Link to="/mes-droits" style={linkStyle('/mes-droits')}>Mes droits</Link>
-          </>
-        )}
-
-        {/* ── Vendeur (id_role: 2) ── */}
-        {isVendeur && (
-          <>
-            <Link to="/"                          style={linkStyle('/__home__')}>Accueil</Link>
-            <Link to="/vendeur/dashboard"         style={linkStyle('/vendeur/dashboard')}>📊 Dashboard</Link>
-            <Link to="/vendeur/mes-biens"         style={linkStyle('/vendeur/mes-biens')}>Mes Biens</Link>
-            <Link to="/vendeur/mes-demandes"      style={linkStyle('/vendeur/mes-demandes')}>Demandes</Link>
-            <Link to="/vendeur/contrats"          style={linkStyle('/vendeur/contrats')}>Contrats</Link>
-            <Link to="/vendeur/mes-paiements"     style={linkStyle('/vendeur/mes-paiements')}>Paiements</Link>
-            <Link to="/vendeur/mes-transactions"  style={linkStyle('/vendeur/mes-transactions')}>Transactions</Link>
-            <Link to="/vendeur/prediction-prix"   style={linkStyle('/vendeur/prediction-prix')}>🤖 Prédiction</Link>
-            <Link to="/mes-droits"                style={linkStyle('/mes-droits')}>Mes droits</Link>
-          </>
-        )}
-
-        {/* ── Admin (id_role: 1) ── */}
-        {isAdmin && (
-          <>
-            <Link to="/admin/dashboard"              style={linkStyle('/admin/dashboard')}>📊 Dashboard</Link>
-            <Link to="/admin/utilisateurs"           style={linkStyle('/admin/utilisateurs')}>👥 Utilisateurs</Link>
-            <Link to="/admin/biens"                  style={linkStyle('/admin/biens')}>🏠 Biens</Link>
-            <Link to="/admin/contrats"               style={linkStyle('/admin/contrats')}>📋 Contrats</Link>
-            <Link to="/admin/transactions" style={linkStyle('/admin/transactions')}>💳 Paiements & Transactions</Link>
-            <Link to="/admin/contacts"               style={linkStyle('/admin/contacts')}>✉️ Contacts</Link>
-            <Link to="/mes-droits"                   style={linkStyle('/mes-droits')}>Mes droits</Link>
-          </>
-        )}
-
-        {/* ── Client (id_role: 3) ── */}
-        {isClient && (
-          <>
-            <Link to="/"                     style={linkStyle('/__home__')}>Accueil</Link>
-            <Link to="/biens"                style={linkStyle('/biens')}>Tendances</Link>
-            <Link to="/client/favoris"       style={linkStyle('/client/favoris')}>❤️ Favoris</Link>
-            <Link to="/client/mes-contrats"  style={linkStyle('/client/mes-contrats')}>Contrats</Link>
-            <Link to="/client/mes-paiements" style={linkStyle('/client/mes-paiements')}>Paiements</Link>
-            <Link to="/mes-droits"           style={linkStyle('/mes-droits')}>Mes droits</Link>
-          </>
-        )}
-
-      </div>
-
-      {/* ── Profil / Connexion ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-        {!token ? (
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={() => navigate('/login')} style={btnPrimaryStyle}>Connexion</button>
-            <button onClick={() => navigate('/register')} style={btnSecondaryStyle}>S'inscrire</button>
+        {/* ── Logo ── */}
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #1a3a5e, #4a7fb5)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="20" height="20" viewBox="0 0 36 36" fill="none">
+              <polygon points="18,2 34,20 2,20" fill="white" opacity="0.9" />
+              <rect x="6" y="20" width="24" height="14" fill="white" rx="1" />
+              <rect x="14" y="26" width="8" height="8" fill="#1a3a5e" rx="1" />
+            </svg>
           </div>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{
-              fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: 99,
-              background: isAdmin ? '#FEF3C7' : isVendeur ? '#EEF2FF' : '#ECFDF5',
-              color: isAdmin ? '#D97706' : isVendeur ? '#4F46E5' : '#059669',
-              border: `1px solid ${isAdmin ? '#FCD34D' : isVendeur ? '#A5B4FC' : '#6EE7B7'}`,
-            }}>
-              {isAdmin ? '👑 Admin' : isVendeur ? '🏠 Vendeur' : '🤝 Client'}
-            </span>
-            <span style={{ color: '#374151', fontWeight: 600, fontSize: '14px' }}>
-              👤 {user?.prenom || user?.nom || 'Profil'}
-            </span>
-            <button onClick={handleLogout} style={btnLogoutStyle}>Déconnexion</button>
+          <div>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: '700', fontSize: '20px', color: '#1a3a5e', letterSpacing: '0.5px' }}>ImmoExpert</span>
+            <span style={{ display: 'block', fontFamily: "'DM Sans', sans-serif", fontSize: '9px', color: '#b8860b', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: '600', marginTop: '-3px' }}>Maroc</span>
           </div>
-        )}
-      </div>
-    </nav>
+        </Link>
+
+        {/* ── Liens navigation ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+
+          {!token && (
+            <>
+              <Link to="/"                className="nav-link" style={linkStyle('/__home__')}>Accueil</Link>
+              <Link to="/biens"           className="nav-link" style={linkStyle('/biens')}>Tendances</Link>
+              <Link to="/Actualitesmarche" className="nav-link" style={linkStyle('/Actualitesmarche')}>Actualités</Link>
+            </>
+          )}
+
+          {isVendeur && (
+            <>
+              <Link to="/"                         className="nav-link" style={linkStyle('/__home__')}>Accueil</Link>
+              <Link to="/vendeur/dashboard"        className="nav-link" style={linkStyle('/vendeur/dashboard')}>Dashboard</Link>
+              <Link to="/vendeur/mes-biens"        className="nav-link" style={linkStyle('/vendeur/mes-biens')}>Mes Biens</Link>
+              <Link to="/vendeur/mes-demandes"     className="nav-link" style={linkStyle('/vendeur/mes-demandes')}>Demandes</Link>
+              <Link to="/vendeur/contrats"         className="nav-link" style={linkStyle('/vendeur/contrats')}>Contrats</Link>
+              <Link to="/vendeur/mes-paiements"    className="nav-link" style={linkStyle('/vendeur/mes-paiements')}>Paiements</Link>
+              <Link to="/vendeur/mes-transactions" className="nav-link" style={linkStyle('/vendeur/mes-transactions')}>Transactions</Link>
+              <Link to="/vendeur/prediction-prix"  className="nav-link" style={linkStyle('/vendeur/prediction-prix')}>Prédiction</Link>
+              <Link to="/Actualitesmarche"          className="nav-link" style={linkStyle('/Actualitesmarche')}>Actualités</Link>
+            </>
+          )}
+
+          {isAdmin && (
+            <>
+              <Link to="/admin/dashboard"    className="nav-link" style={linkStyle('/admin/dashboard')}>Dashboard</Link>
+              <Link to="/admin/utilisateurs" className="nav-link" style={linkStyle('/admin/utilisateurs')}>Utilisateurs</Link>
+              <Link to="/admin/biens"        className="nav-link" style={linkStyle('/admin/biens')}>Biens</Link>
+              <Link to="/admin/contrats"     className="nav-link" style={linkStyle('/admin/contrats')}>Contrats</Link>
+              <Link to="/admin/transactions" className="nav-link" style={linkStyle('/admin/transactions')}>Paiements</Link>
+              <Link to="/admin/contacts"     className="nav-link" style={linkStyle('/admin/contacts')}>Contacts</Link>
+        
+              <Link to="/Actualitesmarche"   className="nav-link" style={linkStyle('/Actualitesmarche')}>Actualités</Link>
+            </>
+          )}
+
+          {isClient && (
+            <>
+              <Link to="/"                     className="nav-link" style={linkStyle('/__home__')}>Accueil</Link>
+              <Link to="/biens"                className="nav-link" style={linkStyle('/biens')}>Tendances</Link>
+              <Link to="/client/favoris"       className="nav-link" style={linkStyle('/client/favoris')}>❤️ Favoris</Link>
+              <Link to="/client/mes-contrats"  className="nav-link" style={linkStyle('/client/mes-contrats')}>Contrats</Link>
+              <Link to="/client/mes-paiements" className="nav-link" style={linkStyle('/client/mes-paiements')}>Paiements</Link>
+              <Link to="/carte" style={linkStyle('/carte')}>🗺️ Carte</Link>
+              <Link to="/Actualitesmarche"     className="nav-link" style={linkStyle('/Actualitesmarche')}>Actualités</Link>
+            </>
+          )}
+        </div>
+
+        {/* ── Profil / Connexion ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          {!token ? (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button className="btn-login" onClick={() => navigate('/login')} style={{
+                background: '#1a3a5e', color: 'white', border: 'none',
+                padding: '9px 22px', borderRadius: '4px', cursor: 'pointer',
+                fontWeight: '600', fontSize: '13px', fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: '0.5px', transition: 'all 0.2s'
+              }}>
+                Connexion
+              </button>
+              <button className="btn-register" onClick={() => navigate('/register')} style={{
+                background: 'white', color: '#1a3a5e',
+                border: '1.5px solid #1a3a5e',
+                padding: '9px 18px', borderRadius: '4px', cursor: 'pointer',
+                fontWeight: '600', fontSize: '13px', fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: '0.5px', transition: 'all 0.2s'
+              }}>
+                S'inscrire
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+
+              {/* Badge rôle */}
+              <span style={{
+                fontSize: '10px', fontWeight: '700', padding: '4px 10px', borderRadius: '20px',
+                fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px',
+                background: isAdmin ? '#fef9ec' : isVendeur ? '#eef4fb' : '#ecfdf5',
+                color: isAdmin ? '#b8860b' : isVendeur ? '#1a3a5e' : '#059669',
+                border: `1px solid ${isAdmin ? '#f0c060' : isVendeur ? '#b8d0e8' : '#6ee7b7'}`,
+              }}>
+                {isAdmin ? '👑 Admin' : isVendeur ? '🏠 Vendeur' : '🤝 Client'}
+              </span>
+
+              {/* Avatar + Nom */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 12px', background: '#f0f6ff', borderRadius: '20px' }}>
+                <div style={{
+                  width: '28px', height: '28px', borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #1a3a5e, #4a7fb5)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '12px', color: 'white', fontWeight: '700', fontFamily: "'DM Sans', sans-serif"
+                }}>
+                  {(user?.prenom?.[0] || user?.nom?.[0] || 'U').toUpperCase()}
+                </div>
+                <span style={{ color: '#1a3a5e', fontWeight: '600', fontSize: '13px', fontFamily: "'DM Sans', sans-serif" }}>
+                  {user?.prenom || user?.nom || 'Profil'}
+                </span>
+              </div>
+
+              {/* Bouton déconnexion */}
+              <button className="btn-logout" onClick={handleLogout} style={{
+                background: 'white', color: '#ef4444',
+                border: '1.5px solid #ef4444',
+                padding: '7px 14px', borderRadius: '4px', cursor: 'pointer',
+                fontWeight: '600', fontSize: '12px', fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: '0.3px', transition: 'all 0.2s'
+              }}>
+                Déconnexion
+              </button>
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
   )
 }
-
-const btnPrimaryStyle   = { background: '#2563eb', color: 'white', border: 'none', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }
-const btnSecondaryStyle = { background: 'white', color: '#2563eb', border: '1px solid #2563eb', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }
-const btnLogoutStyle    = { background: 'white', color: '#ef4444', border: '1px solid #ef4444', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px' }
 
 export default Navbar

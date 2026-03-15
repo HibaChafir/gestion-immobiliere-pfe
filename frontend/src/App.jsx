@@ -24,6 +24,8 @@ import Transactions from './pages/admin/Transactions'
 import DashboardAdmin from './pages/admin/Dashboard'
 import GestionContacts from './pages/admin/GestionContacts'
 import GestionContrats from './pages/admin/GestionsContrats'
+import Actualitesmarche from './pages/Actualitesmarche'
+import CarteBiens from './pages/acheteur/CarteBiens'
 function App() {
   return (
     <>
@@ -36,7 +38,7 @@ function App() {
         <Route path="/biens"      element={<Tendances />} />
         <Route path="/biens/:id"  element={<DetailBien />} />
         <Route path="/contact"    element={<h1>Contact</h1>} />
-        <Route path="/mes-droits" element={<h1>Mes droits</h1>} />
+        <Route path="/actualitesmarche" element={<Actualitesmarche/>} />
 
         {/* ── Vendeur ── */}
         <Route path="/vendeur/dashboard"         element={<DashboardVendeur />} />
@@ -62,6 +64,7 @@ function App() {
         <Route path="/client/favoris"       element={<MesFavoris />} />
         <Route path="/client/mes-contrats"  element={<MesContratsAcheteur />} />
         <Route path="/client/mes-paiements" element={<MesPaiementsAcheteur />} />
+        <Route path="/carte" element={<CarteBiens />} />
 
         {/* Anciennes routes (compatibilité) */}
         <Route path="/acheteur/contrats" element={<MesContratsAcheteur />} />
