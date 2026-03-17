@@ -1,202 +1,336 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contrat #{{ str_pad($contrat->id_contrat, 5, '0', STR_PAD_LEFT) }}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #0f172a; background: #fff; }
-
-    .header { background: #0f172a; color: #fff; padding: 28px 36px; }
-    .header h1 { font-size: 22px; font-weight: bold; margin-bottom: 4px; }
-    .header p  { font-size: 11px; color: #94a3b8; }
-
-    .body { padding: 28px 36px; }
-
-    .section-title {
-      font-size: 11px; font-weight: bold; color: #4F46E5;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin: 20px 0 8px;
+    body {
+      font-family: 'Georgia', serif;
+      font-size: 13px;
+      color: #0f1e35;
+      padding: 50px;
+      background: white;
     }
 
-    .box {
-      background: #f8faff; border: 1px solid #e2e8f0;
-      border-radius: 6px; padding: 14px 16px;
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #c8a96e;
+      position: relative;
     }
-
-    .bien-titre  { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
-    .bien-detail { font-size: 11px; color: #64748b; }
-
-    .parties { display: table; width: 100%; border-collapse: collapse; }
-    .partie  { display: table-cell; width: 50%; padding-right: 12px; }
-    .partie:last-child { padding-right: 0; padding-left: 12px; }
-
-    .partie-label { font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; }
-    .partie-nom   { font-size: 14px; font-weight: bold; color: #0f172a; }
-    .partie-email { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-
-    .montant-box {
-      background: #f0fdf4; border: 1px solid #bbf7d0;
-      border-radius: 6px; padding: 14px 16px;
-    }
-    .montant-value { font-size: 24px; font-weight: bold; color: #064e3b; }
-    .montant-label { font-size: 11px; color: #059669; margin-bottom: 4px; }
-    .montant-date  { font-size: 11px; color: #64748b; margin-top: 6px; }
-
-    .clauses { background: #f8faff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px 16px; }
-    .clause  { font-size: 10.5px; color: #475569; line-height: 1.7; margin-bottom: 2px; }
-
-    .signatures { display: table; width: 100%; border-collapse: collapse; margin-top: 8px; }
-    .sig-box {
-      display: table-cell; width: 50%;
-      border: 1px solid #e2e8f0; border-radius: 6px;
-      padding: 12px 14px; background: #f8faff;
-    }
-    .sig-box:first-child { margin-right: 8px; }
-    .sig-label { font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
-    .sig-img   { max-width: 100%; height: 60px; object-fit: contain; }
-    .sig-ok    { font-size: 10px; color: #059669; font-weight: bold; margin-top: 6px; }
-    .sig-wait  { font-size: 10px; color: #d97706; font-weight: bold; margin-top: 20px; }
-
-    .separator { border: none; border-top: 1px solid #e2e8f0; margin: 18px 0; }
-
-    .footer {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #f1f5f9; padding: 8px 36px;
-      font-size: 9px; color: #94a3b8;
-      display: flex; justify-content: space-between;
-    }
-
-    .badge {
-      display: inline-block; background: #ecfdf5; color: #059669;
-      border: 1px solid #6ee7b7; border-radius: 20px;
-      padding: 3px 12px; font-size: 10px; font-weight: bold;
+    .header-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       margin-bottom: 16px;
+    }
+    .header-brand-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: #0f1e35;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(200,169,110,0.3);
+    }
+    .header-brand-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f1e35;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .header-brand-sub {
+      font-size: 8px;
+      color: rgba(200,169,110,0.8);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      display: block;
+      margin-top: 2px;
+    }
+    .header h1 {
+      font-size: 13px;
+      color: #9ca3af;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      font-weight: 400;
+    }
+    .header-line {
+      width: 40px;
+      height: 1px;
+      background: #c8a96e;
+      margin: 12px auto;
+    }
+
+    /* ── Ref bar ── */
+    .ref-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f1e35;
+      border-radius: 10px;
+      padding: 14px 22px;
+      margin-bottom: 30px;
+    }
+    .ref-bar span {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: rgba(200,169,110,0.7);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .ref-bar strong {
+      color: white;
+      font-size: 12px;
+    }
+
+    /* ── Statut badge ── */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .badge-signe_complet { background: rgba(5,150,105,0.1);  color: #065f46; border: 1px solid rgba(5,150,105,0.25); }
+    .badge-signe_vendeur { background: rgba(180,83,9,0.08);  color: #b45309; border: 1px solid rgba(180,83,9,0.2);   }
+    .badge-en_attente    { background: rgba(109,40,217,0.08); color: #6d28d9; border: 1px solid rgba(109,40,217,0.2);}
+    .badge-signe         { background: rgba(200,169,110,0.1); color: #c8a96e; border: 1px solid rgba(200,169,110,0.3);}
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 9px;
+      color: #c8a96e;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      border-left: 2px solid #c8a96e;
+      padding-left: 10px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table td {
+      padding: 10px 14px;
+      border: 1px solid rgba(200,169,110,0.12);
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #0f1e35;
+    }
+    table td:first-child {
+      font-weight: 700;
+      background: #fdfcfa;
+      width: 32%;
+      color: #9ca3af;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .montant-row td:last-child {
+      font-size: 16px;
+      font-weight: 700;
+      color: #065f46;
+      font-family: 'Georgia', serif;
+    }
+
+    /* ── Signatures ── */
+    .sig-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .sig-box {
+      flex: 1;
+      border: 1px solid rgba(200,169,110,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background: #fdfcfa;
+    }
+    .sig-box h3 {
+      font-size: 9px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+      font-family: Arial, sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .sig-box img {
+      width: 200px;
+      height: 70px;
+      object-fit: contain;
+    }
+    .sig-empty {
+      color: #c4bfb8;
+      font-size: 12px;
+      padding: 24px 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .sig-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      display: inline-block;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 50px;
+      background: #0f1e35;
+      border-radius: 10px;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(200,169,110,0.8);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer-text {
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+
+    @media print {
+      body { padding: 24px; }
+      .footer { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
 
-  <!-- En-tête -->
+  <!-- ══ HEADER ══ -->
   <div class="header">
-    <h1>CONTRAT IMMOBILIER</h1>
-    <p>
-      N° {{ str_pad($contrat->id_contrat, 5, '0', STR_PAD_LEFT) }}
-      &nbsp;·&nbsp; {{ $contrat->bien->titre ?? '—' }}
-      &nbsp;·&nbsp; Généré le {{ now()->format('d/m/Y') }}
-    </p>
+    <div class="header-brand">
+      <div class="header-brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <span class="header-brand-name">ImmoExpert</span>
+        <span class="header-brand-sub">Maroc</span>
+      </div>
+    </div>
+    <div class="header-line"></div>
+    <h1>Contrat Immobilier Officiel</h1>
   </div>
 
-  <div class="body">
+  <!-- ══ REF BAR ══ -->
+  <div class="ref-bar">
+    <span>Référence : <strong>#{{ str_pad($contrat->id_contrat, 5, '0', STR_PAD_LEFT) }}</strong></span>
+    <span>Date : <strong>{{ \Carbon\Carbon::parse($contrat->date_contrat)->format('d M Y') }}</strong></span>
+    <span>Statut :
+      @php
+        $labels = [
+          'signe_complet' => 'Signé complet',
+          'signe_vendeur' => 'Signé vendeur',
+          'en_attente'    => 'En attente',
+          'signe'         => 'Signé',
+        ];
+      @endphp
+      <span class="badge badge-{{ $contrat->statut }}">
+        {{ $labels[$contrat->statut] ?? $contrat->statut }}
+      </span>
+    </span>
+  </div>
 
-    <span class="badge">✓ CONTRAT ENREGISTRÉ</span>
+  <!-- ══ BIEN ══ -->
+  <div class="section">
+    <div class="section-title">Bien Immobilier</div>
+    <table>
+      <tr><td>Titre</td><td>{{ $contrat->bien->titre ?? '—' }}</td></tr>
+      <tr><td>Type</td><td>{{ ucfirst($contrat->bien->type_bien ?? '—') }}</td></tr>
+      <tr><td>Surface</td><td>{{ $contrat->bien->surface ?? '—' }} m²</td></tr>
+      <tr><td>Pièces</td><td>{{ $contrat->bien->nb_pieces ?? '—' }}</td></tr>
+      <tr><td>Adresse</td><td>{{ $contrat->bien->adresse ?? '—' }}</td></tr>
+      <tr class="montant-row"><td>Montant</td><td>{{ number_format($contrat->montant, 0, ',', ' ') }} MAD</td></tr>
+    </table>
+  </div>
 
-    <!-- Bien immobilier -->
-    <div class="section-title">🏠 Bien Immobilier</div>
-    <div class="box">
-      <div class="bien-titre">{{ $contrat->bien->titre ?? '—' }}</div>
-      <div class="bien-detail">
-        Surface : {{ $contrat->bien->surface ?? '—' }} m²
-        &nbsp;·&nbsp; Pièces : {{ $contrat->bien->nb_pieces ?? '—' }}
-        &nbsp;·&nbsp; Type : {{ $contrat->bien->type_bien === 'vente' ? 'Vente' : 'Location' }}
-        @if($contrat->bien->adresse)
-          &nbsp;·&nbsp; {{ $contrat->bien->adresse }}
+  <!-- ══ VENDEUR ══ -->
+  <div class="section">
+    <div class="section-title">Vendeur / Propriétaire</div>
+    <table>
+      <tr><td>Nom complet</td><td>{{ $contrat->vendeur->prenom ?? '' }} {{ $contrat->vendeur->nom ?? '—' }}</td></tr>
+      <tr><td>Email</td><td>{{ $contrat->vendeur->email ?? '—' }}</td></tr>
+      <tr><td>Téléphone</td><td>{{ $contrat->vendeur->telephone ?? '—' }}</td></tr>
+    </table>
+  </div>
+
+  <!-- ══ ACHETEUR ══ -->
+  <div class="section">
+    <div class="section-title">Acheteur / Locataire</div>
+    <table>
+      <tr><td>Nom complet</td><td>{{ $contrat->acheteur->prenom ?? '' }} {{ $contrat->acheteur->nom ?? '—' }}</td></tr>
+      <tr><td>Email</td><td>{{ $contrat->acheteur->email ?? '—' }}</td></tr>
+      <tr><td>Téléphone</td><td>{{ $contrat->acheteur->telephone ?? '—' }}</td></tr>
+    </table>
+  </div>
+
+  <!-- ══ SIGNATURES ══ -->
+  <div class="section">
+    <div class="section-title">Signatures Électroniques</div>
+    <div class="sig-row">
+      <div class="sig-box">
+        <h3>Signature Vendeur</h3>
+        @if($contrat->signature_vendeur)
+          <img src="{{ $contrat->signature_vendeur }}" alt="Signature vendeur" />
+        @else
+          <div class="sig-empty">
+            <span class="sig-dot"></span>
+            Non signé
+          </div>
+        @endif
+      </div>
+      <div class="sig-box">
+        <h3>Signature Acheteur</h3>
+        @if($contrat->signature_acheteur)
+          <img src="{{ $contrat->signature_acheteur }}" alt="Signature acheteur" />
+        @else
+          <div class="sig-empty">
+            <span class="sig-dot"></span>
+            Non signé
+          </div>
         @endif
       </div>
     </div>
-
-    <hr class="separator">
-
-    <!-- Parties -->
-    <div class="section-title">👥 Parties du contrat</div>
-    <table style="width:100%; border-collapse:separate; border-spacing: 0 0;">
-      <tr>
-        <td style="width:50%; padding-right:8px;">
-          <div class="box">
-            <div class="partie-label">Vendeur / Propriétaire</div>
-            <div class="partie-nom">{{ $contrat->vendeur->prenom ?? '' }} {{ $contrat->vendeur->nom ?? '—' }}</div>
-            <div class="partie-email">{{ $contrat->vendeur->email ?? '' }}</div>
-            @if($contrat->vendeur->telephone)
-              <div class="partie-email">{{ $contrat->vendeur->telephone }}</div>
-            @endif
-          </div>
-        </td>
-        <td style="width:50%; padding-left:8px;">
-          <div class="box">
-            <div class="partie-label">Acheteur / Locataire</div>
-            <div class="partie-nom">{{ $contrat->acheteur->prenom ?? '' }} {{ $contrat->acheteur->nom ?? '—' }}</div>
-            <div class="partie-email">{{ $contrat->acheteur->email ?? '' }}</div>
-            @if($contrat->acheteur->telephone)
-              <div class="partie-email">{{ $contrat->acheteur->telephone }}</div>
-            @endif
-          </div>
-        </td>
-      </tr>
-    </table>
-
-    <hr class="separator">
-
-    <!-- Montant -->
-    <div class="section-title">💰 Détails financiers</div>
-    <div class="montant-box">
-      <div class="montant-label">Montant total</div>
-      <div class="montant-value">
-        {{ number_format($contrat->montant, 0, ',', ' ') }} MAD
-      </div>
-      <div class="montant-date">
-        Date du contrat :
-        {{ \Carbon\Carbon::parse($contrat->date_contrat)->isoFormat('D MMMM YYYY') }}
-      </div>
-    </div>
-
-    <hr class="separator">
-
-    <!-- Clauses -->
-    <div class="section-title">📋 Conditions générales</div>
-    <div class="clauses">
-      <div class="clause">1. Le vendeur garantit être le seul propriétaire du bien et avoir le droit de le vendre ou louer.</div>
-      <div class="clause">2. L'acheteur/locataire reconnaît avoir visité le bien et l'accepter en l'état.</div>
-      <div class="clause">3. Le paiement du montant convenu sera effectué selon les modalités agréées entre les parties.</div>
-      <div class="clause">4. Tout litige sera soumis à la juridiction compétente du ressort du lieu du bien.</div>
-      <div class="clause">5. Le présent contrat est régi par la législation marocaine en vigueur.</div>
-    </div>
-
-    <hr class="separator">
-
-    <!-- Signatures -->
-    <div class="section-title">✍️ Signatures électroniques</div>
-    <table style="width:100%; border-collapse:separate; border-spacing:0;">
-      <tr>
-        <td style="width:50%; padding-right:8px; vertical-align:top;">
-          <div class="box">
-            <div class="sig-label">Signature du vendeur</div>
-            @if($contrat->signature_vendeur)
-              <img src="{{ $contrat->signature_vendeur }}" class="sig-img" alt="Signature vendeur" />
-              <div class="sig-ok">✓ Signé électroniquement</div>
-            @else
-              <div class="sig-wait">⏳ En attente</div>
-            @endif
-          </div>
-        </td>
-        <td style="width:50%; padding-left:8px; vertical-align:top;">
-          <div class="box">
-            <div class="sig-label">Signature de l'acheteur</div>
-            @if($contrat->signature_acheteur)
-              <img src="{{ $contrat->signature_acheteur }}" class="sig-img" alt="Signature acheteur" />
-              <div class="sig-ok">✓ Signé électroniquement</div>
-            @else
-              <div class="sig-wait">⏳ En attente</div>
-            @endif
-          </div>
-        </td>
-      </tr>
-    </table>
-
   </div>
 
-  <!-- Pied de page -->
+  <!-- ══ FOOTER ══ -->
   <div class="footer">
-    <span>Ce document a été généré automatiquement par la Plateforme de Gestion Immobilière.</span>
-    <span>Contrat N° {{ str_pad($contrat->id_contrat, 5, '0', STR_PAD_LEFT) }}</span>
+    <span class="footer-brand">ImmoExpert</span>
+    <div class="footer-text">
+      Généré le {{ now()->format('d M Y') }} à {{ now()->format('H:i') }}<br>
+      Document officiel — ImmoExpert © 2026
+    </div>
   </div>
 
 </body>
